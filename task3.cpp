@@ -49,10 +49,9 @@ class Triangle :public Figure
 protected:
 	int a, b, c;
 	int A, B, C;
-	int sum;
 	std::string name = "Треугольник";
 public:
-	Triangle( int a, int b, int c, int A, int B, int C) :Figure(sum)
+	Triangle( int a, int b, int c, int A, int B, int C) :Figure(3)
 	{
 		this->a = a;
 		this->b = b;
@@ -60,7 +59,6 @@ public:
 		this->A = A;
 		this->B = B;
 		this->C = C;
-		sum = 3;
 	}
 	void NumSides() override
 	{
@@ -105,10 +103,8 @@ class Triangle90 :public Triangle
 {
 protected:
 	std::string name = "Прямоугольный треугольник";
-	int a, b, c;
-	int A, B, C;
 public:
-	Triangle90(int a, int b, int c, int A, int B, int C) :Triangle(a, b, c, A, B, C)
+	Triangle90(int a, int b, int c, int A, int B) :Triangle(a, b, c, A, B, 90)
 	{
 		this->a = a;
 		this->b = b;
@@ -123,7 +119,7 @@ public:
 	}
 	bool Check() override
 	{
-		if ((A + B + C) != 180 || C != 90) return false;
+		if (!Triangle::Check() || C != 90) return false;
 		else return true;
 	}
 };
@@ -131,10 +127,8 @@ class Isoscelestriangle :public Triangle
 {
 protected:
 	std::string name = "Равнобедренный треугольник";
-	int a, b, c;
-	int A, B, C;
 public:
-	Isoscelestriangle(int a, int b, int c, int A, int B, int C) :Triangle(a, b, c, A, B, C)
+	Isoscelestriangle(int a, int b, int A, int B) :Triangle(a, b, a, A, B, A)
 	{
 		this->a = a;
 		this->b = b;
@@ -149,7 +143,7 @@ public:
 	}
 	bool Check() override
 	{
-		if ((A + B + C) != 180 || (a != c && A != C))
+		if (!Triangle::Check() || (a != c && A != C))
 		{
 			return false;
 		}
@@ -161,9 +155,8 @@ class Triangle60 :public Triangle
 {
 protected:
 	std::string name = "Равносторонний треугольник";
-	int a, b, c, A, B, C;
 public:
-	Triangle60(int a, int b, int c, int A, int B, int C) :Triangle(a, b, c, A, B, C)
+	Triangle60(int a) :Triangle(a, a, a, 60, 60, 60)
 	{
 		this->a = a;
 		this->b = b;
@@ -178,7 +171,7 @@ public:
 	}
 	bool Check() override
 	{
-		if ((A + B + C != 180) || (a != b || b != c || a != c || A != B || A != C || B != C)) return false;
+		if (!Triangle::Check() || (a != b || b != c || a != c || A != B || A != C || B != C)) return false;
 		else return true;
 	}
 };
@@ -188,9 +181,8 @@ protected:
 	int a, b, c, d;
 	int A, B, C, D;
 	std::string name = "Четырёхугольник";
-	int sum = 4;
 public:
-	Quadrangle(int a, int b, int c, int d, int A, int B, int C, int D) :Figure(a)
+	Quadrangle(int a, int b, int c, int d, int A, int B, int C, int D) :Figure(4)
 	{
 		this->a = a;
 		this->b = b;
@@ -235,14 +227,12 @@ public:
 		 Angles();
 	 }
 };
-class Recangle :public Quadrangle
+class Paralelogramm : public Quadrangle
 {
 protected:
-	int a, b, c, d;
-	int A, B, C, D;
-	std::string name = "Прямоугольник";
+	std::string name = "Параллелограмм";
 public:
-	Recangle(int a, int b, int c, int d, int A, int B, int C, int D) :Quadrangle(a,b,c,d,A,B,C,D)
+	Paralelogramm(int a, int b, int A, int B) :Quadrangle(a, b, a, b, A, B, A, B)
 	{
 		this->a = a;
 		this->b = b;
@@ -259,75 +249,43 @@ public:
 	}
 	bool Check() override
 	{
-		if (A + B + C + D != 360||a!=c||b!=d||A!=90||B!=90||C!=90||D!=90) return false;
+		if (!Quadrangle::Check() || a != c || b != d || A != C || B != D) return false;
+		else return true;
+	}
+};
+class Recangle :public Paralelogramm
+{
+protected:
+	std::string name = "Прямоугольник";
+public:
+	Recangle(int a, int b) :Paralelogramm(a,b,90,90)
+	{
+		this->a = a;
+		this->b = b;
+		this->c = c;
+		this->d = d;
+		this->A = A;
+		this->B = B;
+		this->C = C;
+		this->D = D;
+	}
+	std::string GetName() override
+	{
+		return name;
+	}
+	bool Check() override
+	{
+		if (!Quadrangle::Check() || a != c || b != d || A != 90 || B != 90 || C != 90 || D != 90) return false;
 		else return true;
 	}
 
 };
-class Square :public Quadrangle
+class Rhomb :public Paralelogramm
 {
 protected:
-	int a, b, c, d;
-	int A, B, C, D;
-	std::string name = "Квадрат";
-public:
-	Square(int a, int b, int c, int d, int A, int B, int C, int D) :Quadrangle(a, b, c, d, A, B, C, D)
-	{
-		this->a = a;
-		this->b = b;
-		this->c = c;
-		this->d = d;
-		this->A = A;
-		this->B = B;
-		this->C = C;
-		this->D = D;
-	}
-	std::string GetName() override
-	{
-		return name;
-	}
-	bool Check() override
-	{
-		if (A + B + C + D != 360 || a != c ||a!=b||a!=d||b!=c|| b != d ||c!=d|| A != 90 || B != 90 || C != 90 || D != 90) return false;
-		else return true;
-	}
-};
-class Paralelogramm : public Quadrangle
-{
-protected:
-	int a, b, c, d;
-	int A, B, C, D;
-	std::string name = "Параллелограмм";
-public:
-	Paralelogramm(int a, int b, int c, int d, int A, int B, int C, int D) :Quadrangle(a, b, c, d, A, B, C, D)
-	{
-		this->a = a;
-		this->b = b;
-		this->c = c;
-		this->d = d;
-		this->A = A;
-		this->B = B;
-		this->C = C;
-		this->D = D;
-	}
-	std::string GetName() override
-	{
-		return name;
-	}
-	bool Check() override
-	{
-		if (A + B + C + D != 360 || a !=c||b!=d || A!=C||B!=D) return false;
-		else return true;
-	}
-};
-class Rhomb :public Quadrangle
-{
-protected:
-	int a, b, c, d;
-	int A, B, C, D;
 	std::string name = "Ромб";
 public:
-	Rhomb(int a, int b, int c, int d, int A, int B, int C, int D) :Quadrangle(a, b, c, d, A, B, C, D)
+	Rhomb(int a, int A, int B) :Paralelogramm(a, a, A, B)
 	{
 		this->a = a;
 		this->b = b;
@@ -344,7 +302,33 @@ public:
 	}
 	bool Check() override
 	{
-		if (A + B + C + D != 360 || a != c || a != b || a != d || b != c || b != d || c != d ||  A!=C ||B!=D) return false;
+		if (!Quadrangle::Check() || a != c || a != b || a != d || b != c || b != d || c != d || A != C || B != D) return false;
+		else return true;
+	}
+};
+class Square :public Rhomb
+{
+protected:
+	std::string name = "Квадрат";
+public:
+	Square(int a) :Rhomb(a,  90, 90)
+	{
+		this->a = a;
+		this->b = b;
+		this->c = c;
+		this->d = d;
+		this->A = A;
+		this->B = B;
+		this->C = C;
+		this->D = D;
+	}
+	std::string GetName() override
+	{
+		return name;
+	}
+	bool Check() override
+	{
+		if (!Quadrangle::Check() || a != c || a != b || a != d || b != c || b != d || c != d || A != 90 || B != 90 || C != 90 || D != 90) return false;
 		else return true;
 	}
 };
@@ -363,21 +347,21 @@ int main(int argc, char** argv)
 	print(&figure);
 	Triangle triangle( 10, 20, 30, 50, 60, 70);
 	print(&triangle);
-	Triangle90 triangle90(10, 20, 30, 50, 60, 90);
+	Triangle90 triangle90(10, 20, 30, 50, 60);
 	print(&triangle90);
-	Isoscelestriangle isoscelestriangle(10, 20, 10, 50, 80, 50);
+	Isoscelestriangle isoscelestriangle(10, 20, 50, 60);
 	print(&isoscelestriangle);
-	Triangle60 triangle60(30, 30, 30, 60, 60, 60);
+	Triangle60 triangle60(30);
 	print(&triangle60);
 	Quadrangle quadrangle(10, 20, 30, 40, 50, 60, 70, 80);
 	print(&quadrangle);
-	Recangle rectangle(10, 20, 10, 20, 90, 90, 90, 90);
+	Recangle rectangle(10, 20);
 	print(&rectangle);
-	Square square(20, 20, 20, 20, 90, 90, 90, 90);
+	Square square(20);
 	print(&square);
-	Paralelogramm paralelogramm(20, 30, 20, 30, 30, 40, 30, 40);
+	Paralelogramm paralelogramm(20, 30, 30, 40);
 	print(&paralelogramm);
-	Rhomb rhomb(30, 30, 30, 30, 30, 40, 30, 40);
+	Rhomb rhomb(30, 40, 30);
 	print(&rhomb);
 	return 0;
 }
